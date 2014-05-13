@@ -240,7 +240,7 @@ bool App::EditDate()
 	stm.tm_mon = i;
 
 	i = stm.tm_year + 1900;
-	if (!GetInt("Ã:", 2014, 3014, &i))
+	if (!GetInt("", 2014, 3014, &i))
 		return false;
 	stm.tm_year = i - 1900;
 
