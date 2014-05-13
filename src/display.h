@@ -11,7 +11,6 @@
 
 #include <scmRTOS.h>
 #include "drawbuf.h"
-#include "display_task.h"
 #include "rtc.h"
 
 class Display

@@ -1,15 +1,18 @@
+/**
+*  @file hw.h
+*
+*  Project-level hardware declarations.
+*
+*  Created on: 20.04.2014
+*  Copyright (c) 2014 by Anton Gusev aka AHTOXA
+**/
 #ifndef HW_H_INCLUDED
 #define HW_H_INCLUDED
 
-#include "stm32.h"
 #include "pin.h"
-#include "singleton.h"
-#include "uart.h"
-#include "dbg_uart.h"
-#include "board.h"
 
 /**
- * RTC
+ * RTC module
  */
 #include "rtc.h"
 typedef rtc_t<> Rtc;
@@ -68,11 +71,5 @@ extern TMax Max;
 #include "tea5767.h"
 typedef Tea5767<> FmTuner;
 extern FmTuner tuner;
-
-/**
- * Command-line interface
- */
-#include "commands2.h"
-#include "vars2.h"
 
 #endif // HW_H_INCLUDED

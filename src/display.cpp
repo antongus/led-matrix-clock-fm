@@ -49,6 +49,9 @@ void Display::ScrollTime(bool out)
 	}
 }
 
+/**
+ * Display static text.
+ */
 void Display::StaticText(char const* line)
 {
 	Coord x = 0, y = 0;
@@ -58,25 +61,30 @@ void Display::StaticText(char const* line)
 	DrawFrame(0, 0);
 }
 
-uint8_t Display::XlatCol(uint8_t val)
+/**
+ * Translate column number.
+ * (Columns are connected to the driver not in sequence, to simplify board routing).
+ * Argument is 1-based.
+ */
+uint8_t Display::XlatCol(uint8_t col)
 {
 	static uint8_t columnsXlat[] = {7, 0, 4, 2, 6, 3, 1, 5};
-	--val;
-	val = (val / 8) * 8 + columnsXlat[val % 8];
-	return ++val;
+	--col;
+	col = (col / 8) * 8 + columnsXlat[col % 8];
+	return ++col;
 }
 
-uint8_t Display::XlatRow(uint8_t val)
+uint8_t Display::XlatRow(uint8_t row)
 {
 	uint8_t res = 0;
-	if (val & (1 << 7)) res |= (1 << 7);
-	if (val & (1 << 6)) res |= (1 << 2);
-	if (val & (1 << 5)) res |= (1 << 0);
-	if (val & (1 << 4)) res |= (1 << 4);
-	if (val & (1 << 3)) res |= (1 << 1);
-	if (val & (1 << 2)) res |= (1 << 3);
-	if (val & (1 << 1)) res |= (1 << 5);
-	if (val & (1 << 0)) res |= (1 << 6);
+	if (row & (1 << 7)) res |= (1 << 7);
+	if (row & (1 << 6)) res |= (1 << 2);
+	if (row & (1 << 5)) res |= (1 << 0);
+	if (row & (1 << 4)) res |= (1 << 4);
+	if (row & (1 << 3)) res |= (1 << 1);
+	if (row & (1 << 2)) res |= (1 << 3);
+	if (row & (1 << 1)) res |= (1 << 5);
+	if (row & (1 << 0)) res |= (1 << 6);
 	return res;
 }
 
