@@ -6,15 +6,7 @@
 #include "singleton.h"
 #include "uart.h"
 #include "dbg_uart.h"
-#include "STM32-VLD.h"
 #include "board.h"
-
-typedef BoardType::console_uart_t console_uart_t;
-typedef BoardType::debug_uart_t debug_uart_t;
-typedef BoardType::SpiType SpiType;
-
-extern console_uart_t& uart;
-extern SpiType spi;
 
 /**
  * RTC
