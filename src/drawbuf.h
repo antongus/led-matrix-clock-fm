@@ -20,7 +20,7 @@ class DrawBuffer
 public:
 	static const uint32_t WIDTH = width;
 	static const uint32_t HEIGHT = height;
-	static const uint32_t BUF_WIDTH = (width + 3) / 4;    // width in 32-bit words
+	static const uint32_t BUF_WIDTH = (width + 31) / 32;    // width in 32-bit words
 	static const uint32_t BUF_HEIGHT = height;
 
 	DrawBuffer()
