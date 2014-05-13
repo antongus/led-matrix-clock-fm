@@ -143,7 +143,7 @@ void Display::AnimateTime(Coord x, Coord y)
 	now_ = rtc.get();
 	TimeToBuf(buf, now_);
 
-	if ((now_ / 60) != (lastTime_ / 60)) // minute change
+	if ((now_ % 60 == 0) && (now_ / 60) != (lastTime_ / 60)) // minute change
 	{
 		char bufNew[8];
 		TimeToBuf(bufNew, lastTime_);
