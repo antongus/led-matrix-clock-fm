@@ -11,6 +11,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <limits.h>
 
 typedef uint32_t Coord;
 
@@ -20,8 +21,6 @@ class DrawBuffer
 public:
 	static const uint32_t WIDTH = width;
 	static const uint32_t HEIGHT = height;
-	static const uint32_t BUF_WIDTH = (width + 31) / 32;    // width in 32-bit words
-	static const uint32_t BUF_HEIGHT = height;
 
 	DrawBuffer()
 		: writeOriginCol_(0)
@@ -52,14 +51,16 @@ public:
 		memset(buf_, 0, sizeof(buf_));
 	}
 private:
+	enum { BITS_IN_UINT32 = sizeof(uint32_t) * CHAR_BIT };
+	static const uint32_t BUF_WIDTH = (width + BITS_IN_UINT32 - 1) / BITS_IN_UINT32;    // width in uint32_t words
+	static const uint32_t BUF_HEIGHT = height;
 	uint32_t buf_[BUF_HEIGHT][BUF_WIDTH];
 	Coord writeOriginCol_;
 	Coord writeOriginRow_;
 	Coord readOriginCol_;
 	Coord readOriginRow_;
-	enum { BSIZE = sizeof(buf_[0][0]) * 8 };
-	Coord checkCol(Coord col) { return col % (BUF_WIDTH*BSIZE); }
-	Coord checkRow(Coord row) { return row % BUF_HEIGHT; }
+	Coord checkCol(Coord col) { return col % WIDTH; }
+	Coord checkRow(Coord row) { return row % HEIGHT; }
 };
 
 template <uint32_t width, uint32_t height>
@@ -67,12 +68,13 @@ void DrawBuffer<width, height>::setPixel(Coord col, Coord row, bool value)
 {
 	col += writeOriginCol_;
 	row += writeOriginRow_;
-	if ((row >=BUF_HEIGHT) || ((col / BSIZE) >= BUF_WIDTH))
-		return;
-	if (value)
-		buf_[row][col / BSIZE] |= 1UL << (col % BSIZE);
-	else
-		buf_[row][col / BSIZE] &= ~(1UL << (col % BSIZE));
+	if ((row < HEIGHT) && (col < WIDTH))
+	{
+		if (value)
+			buf_[row][col / BITS_IN_UINT32] |= 1UL << (col % BITS_IN_UINT32);
+		else
+			buf_[row][col / BITS_IN_UINT32] &= ~(1UL << (col % BITS_IN_UINT32));
+	}
 }
 
 template <uint32_t width, uint32_t height>
@@ -80,7 +82,7 @@ bool DrawBuffer<width, height>::getPixel(Coord col, Coord row)
 {
 	col = checkCol(col + readOriginCol_);
 	row = checkRow(row + readOriginRow_);
-	return buf_[row][col / BSIZE] & (1UL << (col % BSIZE));
+	return buf_[row][col / BITS_IN_UINT32] & (1UL << (col % BITS_IN_UINT32));
 }
 
 template <uint32_t width, uint32_t height>
@@ -88,8 +90,8 @@ uint8_t DrawBuffer<width, height>::getByte(Coord col, Coord row)
 {
 	col = checkCol(col + readOriginCol_);
 	row = checkRow(row + readOriginRow_);
-	int mask = 1UL << (col % BSIZE);
-	col /= BSIZE;
+	int mask = 1UL << (col % BITS_IN_UINT32);
+	col /= BITS_IN_UINT32;
 	uint32_t res = 0;
 	for (int i = 0; i < 8; i++)
 		if (buf_[row++][col] & mask) res |= 1 << i;
@@ -106,8 +108,8 @@ uint8_t DrawBuffer<width, height>::getByte(Coord col, Coord row, uint8_t* masks)
 {
 	col = checkCol(col + readOriginCol_);
 	row = checkRow(row + readOriginRow_);
-	int mask = 1UL << (col % BSIZE);
-	col /= BSIZE;
+	int mask = 1UL << (col % BITS_IN_UINT32);
+	col /= BITS_IN_UINT32;
 	uint32_t res = 0;
 	for (int i = 0; i < 8; i++)
 		if (buf_[row++][col] & mask) res |= masks[i];
