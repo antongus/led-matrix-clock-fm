@@ -1,10 +1,10 @@
 #+---------------------------------------------------------------------------
 #
-#  Copyright (c) 2012 Anton Gusev aka AHTOXA (HTTP://AHTOXA.NET)
+#  Copyright (c) 2014 Anton Gusev aka AHTOXA (HTTP://AHTOXA.NET)
 #
 #  File:       makefile
 #
-#  Contents:   makefile to build arm Cortex-M3 software with gcc
+#  Contents:   makefile to build arm Cortex-M3/M4 software with gcc
 #
 #----------------------------------------------------------------------------
 
@@ -17,11 +17,7 @@
 
 # program version
 	VER_MAJOR	= 0
-	VER_MINOR	= 1
-#	SVN_REV		:= $(strip $(subst Revision:,,$(shell svn info -r HEAD 2>/dev/null | grep Revision:)))
-ifeq ($(SVN_REV),)
-	SVN_REV := 0
-endif
+	VER_MINOR	= 3
 
 # compile options
 	OPTIMIZE	= -O2
@@ -44,13 +40,18 @@ endif
 	CHIP		= STM32F10X_MD_VL
 	HSE_VALUE	= 8000000
 
+ifeq ($(CHIP),STM32F4XX)
+	MCU			= cortex-m4
+	FPU			= -mfpu=fpv4-sp-d16 -mfloat-abi=hard
+else
+	MCU			= cortex-m3
+endif
 
 # compiler defines
 	DEFS		= -D$(CHIP)
 	DEFS		+= -DVER_MAJOR=$(VER_MAJOR)
 	DEFS		+= -DVER_MINOR=$(VER_MINOR)
 	DEFS		+= -DHSE_VALUE=$(HSE_VALUE)
-	DEFS		+= -DSVN_REV=$(SVN_REV)
 
 ifneq (,$(filter STM32F40_41xxx STM32F427_437xx STM32F429_439xx STM32F401xx, $(CHIP)))
 	MCU			= cortex-m4
@@ -126,10 +127,11 @@ endif
 #	DIRS	+= $(SRCDIR)/terminal
 	DIRS	+= $(LIBDIR)
 	DIRS	+= $(SCMDIR)/Common $(SCMDIR)/CortexM3
-	DIRS	+= $(SCMDIR)/Extensions
+
 ifeq ($(USE_PROFILER),YES)
 	DIRS	+= $(SRCDIR)/profiler
 endif
+
 # includes
 	INCS	:= $(patsubst %, -I "%", $(DIRS))
 
@@ -150,7 +152,6 @@ endif
 	OBJS	:= $(OBJS:.c=.o)
 	OBJS	:= $(OBJS:.S=.o)
 	OBJS	:= $(patsubst %, $(OBJDIR)/%, $(OBJS))
-
 
 # flags
 	FLAGS	= -mcpu=$(MCU) -mthumb
@@ -210,7 +211,8 @@ endif
 	OPENOCD_PARAMS		= -d0
 
 # interface and board/target settings (using the OOCD target-library here)
-	OPENOCD_PARAMS		+= -f board/stm32f4discovery.cfg
+	OPENOCD_PARAMS		+= -f interface/arm-usb-ocd.cfg 
+	OPENOCD_PARAMS		+= -f $(PRJDIR)/STM32F10X.cfg
 	OPENOCD_PARAMS		+= -c init
 	OPENOCD_PARAMS		+= -c "sleep 200"
 
