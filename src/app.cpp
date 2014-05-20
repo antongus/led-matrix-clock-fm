@@ -320,7 +320,7 @@ void App::EditConfig()
 		switch (ch)
 		{
 		case BUTTON_UP:
-			if (++pos > configMenuSize) pos = 0;
+			if (++pos >= configMenuSize) pos = 0;
 			break;
 
 		case BUTTON_DOWN:
