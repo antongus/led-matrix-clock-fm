@@ -1,0 +1,3 @@
+[submodule "stm32tpl"]
+	path = stm32tpl
+	url = https://antongus@github.com/antongus/stm32tpl.git
