@@ -1,3 +1,6 @@
 [submodule "stm32tpl"]
 	path = stm32tpl
 	url = https://antongus@github.com/antongus/stm32tpl.git
+[submodule "prj/ld"]
+	path = prj/ld
+	url = https://antongus@github.com/antongus/stm32-ld-scripts.git
