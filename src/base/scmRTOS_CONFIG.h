@@ -54,7 +54,7 @@ typedef uint_fast32_t tick_count_t;
 
 #endif // __ASSEMBLER__
 
-#include <stdint.h>
+#include <cstdint>
 //------------------------------------------------------------------------------
 //
 //    Specify scmRTOS Process Count. Must be less than 31

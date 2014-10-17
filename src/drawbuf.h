@@ -8,10 +8,10 @@
 #ifndef DRAWBUF_H_INCLUDED
 #define DRAWBUF_H_INCLUDED
 
-#include <stdint.h>
-#include <stdlib.h>
-#include <string.h>
-#include <limits.h>
+#include <cstdint>
+#include <cstdlib>
+#include <cstring>
+#include <climits>
 
 typedef uint32_t Coord;
 

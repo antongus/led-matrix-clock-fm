@@ -8,7 +8,7 @@
 #include "app.h"
 
 #include "hw.h"
-#include <stdlib.h>
+#include <cstdlib>
 #include "stations.h"
 #include "display.h"
 #include "textbuf.h"

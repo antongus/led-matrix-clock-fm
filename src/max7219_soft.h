@@ -7,7 +7,7 @@
 */
 #ifndef MAX7219_SOFT_INCLUDED
 #define MAX7219_SOFT_INCLUDED
-#include <stdint.h>
+#include <cstdint>
 #include "pin.h"
 
 struct SampleMax7219Props

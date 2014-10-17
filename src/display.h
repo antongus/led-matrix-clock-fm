@@ -1,6 +1,8 @@
 /**
 *  @file display.h
 *
+*  Display class declaration.
+*
 *  Created on: 19.04.2014
 *  Copyright (c) 2014 by Anton Gusev aka AHTOXA
 **/
@@ -8,10 +10,9 @@
 #ifndef DISPLAY_H_INCLUDED
 #define DISPLAY_H_INCLUDED
 
-
 #include <scmRTOS.h>
 #include "drawbuf.h"
-#include <time.h>
+#include <ctime>
 
 class Display
 {

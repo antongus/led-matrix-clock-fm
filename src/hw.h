@@ -9,6 +9,14 @@
 #ifndef HW_H_INCLUDED
 #define HW_H_INCLUDED
 
+/*
+ * Firmware version signature.
+ */
+#define xstr(s) str(s)
+#define str(s) #s
+#define FW_VERSION_STR         "Версия" xstr(VER_MAJOR) "." xstr(VER_MINOR)
+#define FW_VERSION             ((VER_MAJOR * 10.0) + VER_MINOR) / 10.0
+
 #include "stm32.h"
 
 /**
