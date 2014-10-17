@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include "stations.h"
 #include "display.h"
-#include "uart_dummy.h"
+#include "textbuf.h"
 
 App app;
 
@@ -37,9 +37,9 @@ OS_PROCESS void App::UserInterfaceLoop()
 
 		Max.Init();
 
-		if (kbd.keypressed())
+		if (kbd.Keypressed())
 		{
-			int ret = kbd.getch();
+			int ret = kbd.GetChar();
 			if (ret == BUTTON_UP)
 				SelectStation(station_ + 1);
 			else if (ret == BUTTON_DOWN)
@@ -49,8 +49,9 @@ OS_PROCESS void App::UserInterfaceLoop()
 			continue;
 		}
 
+		time_t t = rtc.ReadTime();
 		struct tm stm;
-		rtc.get(&stm);
+		localtime_r(&t, &stm);
 		if (stm.tm_sec == 5)
 		{
 			display.ScrollTime(true);
@@ -116,13 +117,13 @@ void App::ScrollDate()
 //                   12345678901234567890123456789012
 // The longest case: Воскресенье, 22 сентября 2014 г.
 // 33 chars.
-	char buf[40];
 	struct tm stm;
-	rtc.get(&stm);
+	time_t t = rtc.ReadTime();
+	localtime_r(&t, &stm);
 
-	uart_dummy_t u(buf, 40);
+	TextBuffer<40> buf;
 
-	u
+	buf
 		<< dayNames[stm.tm_wday]
 		<< ", "
 		<< stm.tm_mday
@@ -135,20 +136,18 @@ void App::ScrollDate()
 	display.ScrollLine(buf);
 }
 
-bool App::GetInt(char const* prompt, int min, int max, int* val)
+bool App::GetInt(char const* prompt, int min, int max, int* val, bool wrap)
 {
 	int i = *val;
 	if (i > max) i = max;
 	else if (i < min) i = min;
 
-	char buf[25];
-
 	for (;;)
 	{
-		uart_dummy_t u(buf, 25);
-		u << prompt << i;
+		TextBuffer<5> buf;
+		buf << prompt << i;
 		display.StaticText(buf);
-		int ch = kbd.getch(30000); // 30 sec timeout
+		int ch = kbd.GetChar(30000); // 30 sec timeout
 		switch (ch)
 		{
 		case -1:
@@ -156,12 +155,12 @@ bool App::GetInt(char const* prompt, int min, int max, int* val)
 
 		case BUTTON_UP:
 		case BUTTON_UP | BUTTON_REPEAT:
-			if (++i > max) i = min;
+			if (++i > max) i = wrap ? min : max;
 			break;
 
 		case BUTTON_DOWN:
 		case BUTTON_DOWN | BUTTON_REPEAT:
-			if (--i < min) i = max;
+			if (--i < min) i = wrap ? max : min;
 			break;
 
 		case BUTTON_UP | BUTTON_DOWN:
@@ -178,7 +177,7 @@ bool App::GetMonth(int* val)
 	for (;;)
 	{
 		display.StaticText(monthsShort[i]);
-		int ch = kbd.getch(30000); // 30 sec timeout
+		int ch = kbd.GetChar(30000); // 30 sec timeout
 		switch (ch)
 		{
 		case -1:
@@ -205,7 +204,8 @@ bool App::EditTime()
 {
 	struct tm stm;
 	int i;
-	rtc.get(&stm);
+	time_t t = rtc.ReadTime();
+	localtime_r(&t, &stm);
 
 	i = stm.tm_hour;
 	if (!GetInt("Ч:", 0, 23, &i))
@@ -219,7 +219,7 @@ bool App::EditTime()
 
 	stm.tm_sec = 0;
 
-	rtc.set_time(rtc.tm_2_t(&stm));
+	rtc.WriteTime(mktime(&stm));
 	return true;
 }
 
@@ -227,7 +227,8 @@ bool App::EditDate()
 {
 	struct tm stm;
 	int i;
-	rtc.get(&stm);
+	time_t t = rtc.ReadTime();
+	localtime_r(&t, &stm);
 
 	i = stm.tm_mday;
 	if (!GetInt("Д:", 0, 31, &i))
@@ -240,24 +241,22 @@ bool App::EditDate()
 	stm.tm_mon = i;
 
 	i = stm.tm_year + 1900;
-	if (!GetInt("", 2014, 3014, &i))
+	if (!GetInt("", 2014, 3014, &i, false))
 		return false;
 	stm.tm_year = i - 1900;
 
-	rtc.set_time(rtc.tm_2_t(&stm));
+	rtc.WriteTime(mktime(&stm));
 	return true;
 }
 
 bool App::EditBrightness()
 {
-	char buf[25];
-
 	for (;;)
 	{
-		uart_dummy_t u(buf, 25);
-		u << "Я:" << Max.GetBrightness();
+		TextBuffer<5> buf;
+		buf << "Я:" << Max.GetBrightness();
 		display.StaticText(buf);
-		int ch = kbd.getch(30000); // 30 sec timeout
+		int ch = kbd.GetChar(30000); // 30 sec timeout
 		switch (ch)
 		{
 		case -1:
@@ -282,10 +281,10 @@ bool App::EditBrightness()
 
 bool App::EditCorr()
 {
-	int i = rtc.getCorrection();
+	int i = rtc.GetCorrection();
 	if (!GetInt("К", 0, 255, &i))
 		return false;
-	rtc.setCorrection(i);
+	rtc.SetCorrection(i);
 	return true;
 }
 
@@ -307,16 +306,16 @@ void App::EditConfig()
 
 	for (;;)
 	{
-		time_t start = rtc.get();
+		time_t start = rtc.ReadTime();
 		for (;;)
 		{
 			display.ScrollLine(configMenu[pos]);
-			if (kbd.keypressed())
+			if (kbd.Keypressed())
 				break;
-			if (rtc.get() - start > 30)
+			if (rtc.ReadTime() - start > 30)
 				return;
 		}
-		int ch = kbd.getch();
+		int ch = kbd.GetChar();
 		switch (ch)
 		{
 		case BUTTON_UP:

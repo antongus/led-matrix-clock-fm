@@ -27,7 +27,7 @@ private:
 	bool EditBrightness();
 	bool EditCorr();
 	void EditConfig();
-	bool GetInt(char const* prompt, int min, int max, int* val);
+	bool GetInt(char const* prompt, int min, int max, int* val, bool wrap=true);
 	bool GetMonth(int* val);
 };
 

@@ -7,6 +7,7 @@
 
 #include "hw.h"
 #include "display.h"
+#include "textbuf.h"
 
 Display display;
 
@@ -26,7 +27,7 @@ void Display::ScrollLine(char const* line, bool scrollOut)
 	int width = scrollOut ? x : x - 24;	for (int i = 0; i < width; i++)
 	{
 		DrawFrame(i, 0);
-		if (kbd.keypressed())
+		if (kbd.Keypressed())
 			break;
 		OS::sleep(40);
 	}
@@ -43,7 +44,7 @@ void Display::ScrollTime(bool out)
 	for (int i = 0; i < 8; i++)
 	{
 		DrawFrame(0, i);
-		if (kbd.keypressed())
+		if (kbd.Keypressed())
 			break;
 		OS::sleep(40);
 	}
@@ -106,7 +107,7 @@ void Display::AnimateChange(char* bufOld, char* bufNew)
 			drawBuf_.setPixel(11, 7, now_ & 1);
 			drawBuf_.setPixel(12, 7, !(now_ & 1));
 			DrawFrame(0, 0);
-			if (kbd.keypressed())
+			if (kbd.Keypressed())
 				return;
 			OS::sleep(20);
 		}
@@ -115,20 +116,40 @@ void Display::AnimateChange(char* bufOld, char* bufNew)
 
 void Display::TimeToBuf(char* buf, time_t t)
 {
-	char tmpBuf[10];
-	rtc.get_time(tmpBuf, t);
+#if 0
+	char tmpBuf[26];
+	ctime_r(&t, tmpBuf);
+	// 0         1         2         3
+	// 0123456789012345678901234567890
+	// Mon Jul 16 02:03:55 1987\r
+	*buf++ = tmpBuf[11];
+	*buf++ = tmpBuf[12];
+	*buf++ = tmpBuf[14];
+	*buf++ = tmpBuf[15];
+	*buf=0;
+#else
+	struct tm stm;
+	localtime_r(&t, &stm);
+
+	TextBuffer<5> tmpBuf;
+
+	if (stm.tm_hour < 10) tmpBuf << '0';
+	tmpBuf << stm.tm_hour;
+	if (stm.tm_min < 10) tmpBuf << '0';
+	tmpBuf << stm.tm_min;
 	*buf++ = tmpBuf[0];
 	*buf++ = tmpBuf[1];
+	*buf++ = tmpBuf[2];
 	*buf++ = tmpBuf[3];
-	*buf++ = tmpBuf[4];
 	*buf=0;
+#endif
 }
 
 void Display::DrawTime(Coord x, Coord y)
 {
 	char buf[8];
 
-	now_ = rtc.get();
+	now_ = rtc.ReadTime();
 	TimeToBuf(buf, now_);
 
 	Coord drawX = x;
@@ -148,7 +169,7 @@ void Display::AnimateTime(Coord x, Coord y)
 {
 	char buf[8];
 
-	now_ = rtc.get();
+	now_ = rtc.ReadTime();
 	TimeToBuf(buf, now_);
 
 	if ((now_ % 60 == 0) && (now_ / 60) != (lastTime_ / 60)) // minute change

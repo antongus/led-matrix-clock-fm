@@ -1,6 +1,6 @@
 #include "hw.h"
 
-Rtc rtc;
-kbd_t kbd;
+RtcModuleLSE rtc;
+KeyboardType kbd;
 TMax Max;
 FmTuner tuner;

@@ -39,7 +39,7 @@ namespace OS
 		for (;;)
 		{
 			sleep(20);
-			kbd.loop();
+			kbd.Loop();
 		}
     }
 

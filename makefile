@@ -20,8 +20,10 @@
 	VER_MINOR	= 3
 
 # compile options
-	OPTIMIZE	= -O2
-	USE_LTO     = NO
+	OPTIMIZE        = -O3
+	USE_LTO         = NO
+	USE_CPP11       = YES
+	USE_NANO_LIB    = YES
 
 # Select chip: 
 # STM32F10X_LD    : STM32 Low density devices
@@ -40,24 +42,19 @@
 	CHIP		= STM32F10X_MD_VL
 	HSE_VALUE	= 8000000
 
-ifeq ($(CHIP),STM32F4XX)
-	MCU			= cortex-m4
-	FPU			= -mfpu=fpv4-sp-d16 -mfloat-abi=hard
-else
-	MCU			= cortex-m3
-endif
-
 # compiler defines
 	DEFS		= -D$(CHIP)
 	DEFS		+= -DVER_MAJOR=$(VER_MAJOR)
 	DEFS		+= -DVER_MINOR=$(VER_MINOR)
 	DEFS		+= -DHSE_VALUE=$(HSE_VALUE)
 
-ifneq (,$(filter STM32F40_41xxx STM32F427_437xx STM32F429_439xx STM32F401xx, $(CHIP)))
+ifneq (,$(filter STM32F4XX STM32F40_41xxx STM32F427_437xx STM32F429_439xx STM32F401xx, $(CHIP)))
 	MCU			= cortex-m4
 	FPU			= -mfpu=fpv4-sp-d16 -mfloat-abi=hard
 #	FPU			= -mfpu=fpv4-sp-d16 -mfloat-abi=softfp
+ifneq ($(CHIP),STM32F4XX)
     DEFS        += -DSTM32F4XX
+endif
 else
 	MCU			= cortex-m3
 endif
@@ -66,7 +63,7 @@ endif
 	USE_PROFILER		= NO
 
 ###########################################################
-#  common part for all my cortex-m3 projects
+#  common part for all my cortex-m3/m4 projects
 ###########################################################
 
 	BASE		= .
@@ -118,13 +115,12 @@ endif
 # scmRTOS dir
 	SCMDIR		= ../../scmRTOS4
 # lib dir
-	LIBDIR		= ../../cpp_lib
- 
+	LIBDIR		= ./stm32tpl
 
-# source directories (all *.c, *.cpp and *.S files included)
+
+# source directories (all *.c, *.cpp and *.S files from this dirs are included in build)
 	DIRS	:= $(SRCDIR)
 	DIRS	+= $(SRCDIR)/base
-#	DIRS	+= $(SRCDIR)/terminal
 	DIRS	+= $(LIBDIR)
 	DIRS	+= $(SCMDIR)/Common $(SCMDIR)/CortexM3
 
@@ -164,9 +160,9 @@ endif
 
 	CFLAGS	= $(FLAGS)
 	CFLAGS	+= $(OPTIMIZE)
-	ifneq (,$(filter-out discovery defines,$(MAKECMDGOALS)))
+ifneq (,$(filter-out discovery defines,$(MAKECMDGOALS)))
 	CFLAGS	+= -MD 
-    endif
+endif
 	CFLAGS	+= -std=gnu99
 	CFLAGS	+= -g
 	CFLAGS	+= -pipe
@@ -177,9 +173,12 @@ endif
 
 	CXXFLAGS	= $(FLAGS)
 	CXXFLAGS	+= $(OPTIMIZE)
-    ifneq (,$(filter-out discovery defines,$(MAKECMDGOALS)))
+ifneq (,$(filter-out discovery defines,$(MAKECMDGOALS)))
 	CXXFLAGS	+= -MD 
-    endif
+endif
+ifeq ($(USE_CPP11),YES)
+	CXXFLAGS	+= -std=c++11
+endif
 	CXXFLAGS	+= -g
 	CXXFLAGS	+= -pipe
 	CXXFLAGS	+= -fno-exceptions -fno-rtti
@@ -194,6 +193,10 @@ endif
 	LD_FLAGS	+= -mthumb
 	LD_FLAGS	+= $(FPU)
 	LD_FLAGS	+= -nostartfiles 
+ifeq ($(USE_NANO_LIB),YES)
+	LD_FLAGS	+= --specs=nano.specs
+#	LD_FLAGS	+= -u _printf_float  
+endif
 	LD_FLAGS	+= -Wl,-Map="$(MAP)",--cref
 	LD_FLAGS	+= -Wl,--gc-sections
 	LD_FLAGS	+= -L$(LD_SCRIPTS)
@@ -339,7 +342,8 @@ clean:
 
 #discovery target for Eclipse parser
 discovery:
-	$(CC) $(INCS) $(CFLAGS) -E -P -v -dD '$(specs_file)'
+	$(CXX) $(INCS) $(CXXFLAGS) -E -P -v -dD '$(specs_file)'
+	
 defines:
 	$(CC) $(CFLAGS) -dM -E - < /dev/null | sort
 

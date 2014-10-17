@@ -11,7 +11,7 @@
 
 #include <scmRTOS.h>
 #include "drawbuf.h"
-#include "rtc.h"
+#include <time.h>
 
 class Display
 {

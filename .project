@@ -81,11 +81,6 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>lib</name>
-			<type>2</type>
-			<locationURI>$%7BPARENT-2-PROJECT_LOC%7D/cpp_lib</locationURI>
-		</link>
-		<link>
 			<name>scmRTOS</name>
 			<type>2</type>
 			<locationURI>$%7BPARENT-2-PROJECT_LOC%7D/scmRTOS4</locationURI>

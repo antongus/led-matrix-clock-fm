@@ -9,14 +9,13 @@
 #ifndef HW_H_INCLUDED
 #define HW_H_INCLUDED
 
-#include "pin.h"
+#include "stm32.h"
 
 /**
  * RTC module
  */
 #include "rtc.h"
-typedef rtc_t<> Rtc;
-extern Rtc rtc;
+extern RtcModuleLSE rtc;
 
 /**
  * Keyboard stuff
@@ -25,8 +24,8 @@ typedef Pin<'B', 9, 'L'> PinUp;
 typedef Pin<'B', 8, 'L'> PinDown;
 
 #include "kbd.h"
-typedef keyboard_t<8> kbd_t;
-extern kbd_t kbd;
+typedef Keyboard<8> KeyboardType;
+extern KeyboardType kbd;
 
 enum
 {
@@ -35,7 +34,7 @@ enum
 };
 
 template <int buf_size>
-uint16_t keyboard_t<buf_size>::read_input()
+uint16_t Keyboard<buf_size>::ReadInput()
 {
 	uint16_t ret = 0;
 	if (PinUp::Signalled()) ret |= BUTTON_UP;
