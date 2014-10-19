@@ -115,7 +115,7 @@ endif
 # scmRTOS dir
 	SCMDIR		= ../../scmRTOS4
 # lib dir
-	LIBDIR		= ./stm32tpl
+	LIBDIR		= ./lib/stm32tpl
 
 
 # source directories (all *.c, *.cpp and *.S files from this dirs are included in build)
