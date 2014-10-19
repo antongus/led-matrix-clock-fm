@@ -4,3 +4,12 @@
 [submodule "prj/ld"]
 	path = prj/ld
 	url = https://antongus@github.com/antongus/stm32-ld-scripts.git
+[submodule "scmRTOS"]
+	path = scmRTOS
+	url = https://antongus@github.com/antongus/scmRTOS-cortex-m4-gcc.git
+[submodule "libscmRTOS"]
+	path = libscmRTOS
+	url = https://antongus@github.com/antongus/scmRTOS-cortex-m4-gcc.git
+[submodule "lib/scmRTOS"]
+	path = lib/scmRTOS
+	url = https://antongus@github.com/antongus/scmRTOS-cortex-m4-gcc.git

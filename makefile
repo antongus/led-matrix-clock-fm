@@ -113,16 +113,16 @@ endif
 	LD_SCRIPT	= $(CHIP).ld
 
 # scmRTOS dir
-	SCMDIR		= ../../scmRTOS4
+	SCMDIR		= lib/scmRTOS
 # lib dir
-	LIBDIR		= ./lib/stm32tpl
+	LIBDIR		= lib/stm32tpl
 
 
 # source directories (all *.c, *.cpp and *.S files from this dirs are included in build)
 	DIRS	:= $(SRCDIR)
 	DIRS	+= $(SRCDIR)/base
 	DIRS	+= $(LIBDIR)
-	DIRS	+= $(SCMDIR)/Common $(SCMDIR)/CortexM3
+	DIRS	+= $(SCMDIR)/Common $(SCMDIR)/CortexM4F
 
 ifeq ($(USE_PROFILER),YES)
 	DIRS	+= $(SRCDIR)/profiler
