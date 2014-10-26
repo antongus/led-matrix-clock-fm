@@ -22,6 +22,7 @@ void App::InitHardware()
 	PinDown::Mode(INPUTPULLED);
 	PinDown::PullUp();
 
+	Max.SetBrightnessVal(BKP->DR3);
 	Max.Init();
 	Max.Cls();
 }
