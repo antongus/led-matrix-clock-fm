@@ -34,23 +34,6 @@ void Display::ScrollLine(char const* line, bool scrollOut)
 }
 
 /**
- * Scroll time vertically (in or out)
- */
-void Display::ScrollTime(bool out)
-{
-	Coord y = out ? 0 : 8;
-	drawBuf_.clear();
-	DrawTime(0, y);
-	for (int i = 0; i < 8; i++)
-	{
-		DrawFrame(0, i);
-		if (kbd.Keypressed())
-			break;
-		OS::sleep(40);
-	}
-}
-
-/**
  * Display static text.
  */
 void Display::StaticText(char const* line)
@@ -114,22 +97,11 @@ void Display::AnimateChange(char* bufOld, char* bufNew)
 	}
 }
 
+#ifdef USE_RTC
 void Display::TimeToBuf(char* buf, time_t t)
 {
-#if 0
-	char tmpBuf[26];
-	ctime_r(&t, tmpBuf);
-	// 0         1         2         3
-	// 0123456789012345678901234567890
-	// Mon Jul 16 02:03:55 1987\r
-	*buf++ = tmpBuf[11];
-	*buf++ = tmpBuf[12];
-	*buf++ = tmpBuf[14];
-	*buf++ = tmpBuf[15];
-	*buf=0;
-#else
 	struct tm stm;
-	localtime_r(&t, &stm);
+	TimeUtil::localtime(t, &stm);
 
 	TextBuffer<5> tmpBuf;
 
@@ -142,9 +114,10 @@ void Display::TimeToBuf(char* buf, time_t t)
 	*buf++ = tmpBuf[2];
 	*buf++ = tmpBuf[3];
 	*buf=0;
-#endif
 }
+#endif
 
+#ifdef USE_RTC
 void Display::DrawTime(Coord x, Coord y)
 {
 	char buf[8];
@@ -194,4 +167,21 @@ void Display::AnimateTime(Coord x, Coord y)
 	DrawFrame(x, y);
 }
 
+/**
+ * Scroll time vertically (in or out)
+ */
+void Display::ScrollTime(bool out)
+{
+	Coord y = out ? 0 : 8;
+	drawBuf_.clear();
+	DrawTime(0, y);
+	for (int i = 0; i < 8; i++)
+	{
+		DrawFrame(0, i);
+		if (kbd.Keypressed())
+			break;
+		OS::sleep(40);
+	}
+}
 
+#endif

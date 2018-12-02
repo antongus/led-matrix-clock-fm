@@ -14,6 +14,7 @@ struct Station
 {
 	uint32_t freq;
 	const char * Name;
+	const char * freqString;
 };
 
 extern const Station stations[];

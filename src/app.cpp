@@ -12,6 +12,7 @@
 #include "stations.h"
 #include "display.h"
 #include "textbuf.h"
+#include <atomic>
 
 App app;
 
@@ -50,9 +51,10 @@ OS_PROCESS void App::UserInterfaceLoop()
 			continue;
 		}
 
+#ifdef USE_RTC
 		time_t t = rtc.ReadTime();
 		struct tm stm;
-		localtime_r(&t, &stm);
+		TimeUtil::localtime(t, &stm);
 		if (stm.tm_sec == 5)
 		{
 			display.ScrollTime(true);
@@ -67,6 +69,12 @@ OS_PROCESS void App::UserInterfaceLoop()
 		}
 		else
 			display.AnimateTime(0, 0);
+#else
+		if ((OS::get_tick_count() % 10000) < 1000)
+			display.ScrollLine(stations[station_].Name);
+		else
+			display.StaticText(stations[station_].freqString);
+#endif
 	}
 }
 
@@ -100,6 +108,7 @@ void App::SelectStation(int st)
 	PWR->CR &= ~PWR_CR_DBP;
 }
 
+#ifdef USE_RTC
 static const char  *const monthsLong[] =
 	{"января","февраля","марта","апреля","мая","июня",
 	"июля","августа","сентября","октября","ноября","декабря"};
@@ -120,7 +129,7 @@ void App::ScrollDate()
 // 33 chars.
 	struct tm stm;
 	time_t t = rtc.ReadTime();
-	localtime_r(&t, &stm);
+	TimeUtil::localtime(t, &stm);
 
 	TextBuffer<40> buf;
 
@@ -136,41 +145,6 @@ void App::ScrollDate()
 
 	display.ScrollLine(buf);
 }
-
-bool App::GetInt(char const* prompt, int min, int max, int* val, bool wrap)
-{
-	int i = *val;
-	if (i > max) i = max;
-	else if (i < min) i = min;
-
-	for (;;)
-	{
-		TextBuffer<5> buf;
-		buf << prompt << i;
-		display.StaticText(buf);
-		int ch = kbd.GetChar(30000); // 30 sec timeout
-		switch (ch)
-		{
-		case -1:
-			return false;
-
-		case BUTTON_UP:
-		case BUTTON_UP | BUTTON_REPEAT:
-			if (++i > max) i = wrap ? min : max;
-			break;
-
-		case BUTTON_DOWN:
-		case BUTTON_DOWN | BUTTON_REPEAT:
-			if (--i < min) i = wrap ? max : min;
-			break;
-
-		case BUTTON_UP | BUTTON_DOWN:
-			*val = i;
-			return true;
-		}
-	}
-}
-
 bool App::GetMonth(int* val)
 {
 	int i = *val;
@@ -206,7 +180,7 @@ bool App::EditTime()
 	struct tm stm;
 	int i;
 	time_t t = rtc.ReadTime();
-	localtime_r(&t, &stm);
+	TimeUtil::localtime(t, &stm);
 
 	i = stm.tm_hour;
 	if (!GetInt("Ч:", 0, 23, &i))
@@ -220,7 +194,7 @@ bool App::EditTime()
 
 	stm.tm_sec = 0;
 
-	rtc.WriteTime(mktime(&stm));
+	rtc.WriteTime(TimeUtil::mktime(&stm));
 	return true;
 }
 
@@ -229,7 +203,7 @@ bool App::EditDate()
 	struct tm stm;
 	int i;
 	time_t t = rtc.ReadTime();
-	localtime_r(&t, &stm);
+	TimeUtil::localtime(t, &stm);
 
 	i = stm.tm_mday;
 	if (!GetInt("Д:", 0, 31, &i))
@@ -246,8 +220,53 @@ bool App::EditDate()
 		return false;
 	stm.tm_year = i - 1900;
 
-	rtc.WriteTime(mktime(&stm));
+	rtc.WriteTime(TimeUtil::mktime(&stm));
 	return true;
+}
+
+bool App::EditCorr()
+{
+	int i = rtc.GetCorrection();
+	if (!GetInt("К", 0, 255, &i))
+		return false;
+	rtc.SetCorrection(i);
+	return true;
+}
+
+#endif
+
+bool App::GetInt(char const* prompt, int min, int max, int* val, bool wrap)
+{
+	int i = *val;
+	if (i > max) i = max;
+	else if (i < min) i = min;
+
+	for (;;)
+	{
+		TextBuffer<5> buf;
+		buf << prompt << i;
+		display.StaticText(buf);
+		int ch = kbd.GetChar(30000); // 30 sec timeout
+		switch (ch)
+		{
+		case -1:
+			return false;
+
+		case BUTTON_UP:
+		case BUTTON_UP | BUTTON_REPEAT:
+			if (++i > max) i = wrap ? min : max;
+			break;
+
+		case BUTTON_DOWN:
+		case BUTTON_DOWN | BUTTON_REPEAT:
+			if (--i < min) i = wrap ? max : min;
+			break;
+
+		case BUTTON_UP | BUTTON_DOWN:
+			*val = i;
+			return true;
+		}
+	}
 }
 
 bool App::EditBrightness()
@@ -280,22 +299,15 @@ bool App::EditBrightness()
 	return true;
 }
 
-bool App::EditCorr()
-{
-	int i = rtc.GetCorrection();
-	if (!GetInt("К", 0, 255, &i))
-		return false;
-	rtc.SetCorrection(i);
-	return true;
-}
-
 
 static const char  *const configMenu[] =
 	{
+		"Яркость",
+#ifdef USE_RTC
 		"Время",
 		"Дата",
-		"Яркость",
 		"Коррекция",
+#endif
 		"Выход"
 	};
 
@@ -307,13 +319,13 @@ void App::EditConfig()
 
 	for (;;)
 	{
-		time_t start = rtc.ReadTime();
+		tick_count_t start = OS::get_tick_count();
 		for (;;)
 		{
 			display.ScrollLine(configMenu[pos]);
 			if (kbd.Keypressed())
 				break;
-			if (rtc.ReadTime() - start > 30)
+			if (OS::get_tick_count() - start > 30000)
 				return;
 		}
 		int ch = kbd.GetChar();
@@ -331,15 +343,16 @@ void App::EditConfig()
 			switch (pos)
 			{
 			case 0 :
+				EditBrightness();
+				break;
+
+#ifdef USE_RTC
+			case 1 :
 				EditTime();
 				break;
 
-			case 1 :
-				EditDate();
-				break;
-
 			case 2 :
-				EditBrightness();
+				EditDate();
 				break;
 
 			case 3 :
@@ -348,6 +361,10 @@ void App::EditConfig()
 
 			case 4 :
 				return;
+#else
+			case 1 :
+				return;
+#endif
 			}
 		}
 	}

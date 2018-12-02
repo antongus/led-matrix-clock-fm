@@ -22,10 +22,12 @@ public:
 	{}
 
 	void ScrollLine(char const* line, bool scrollOut = true);
-	void ScrollTime(bool out);
 	void StaticText(char const* line);
+#ifdef USE_RTC
+	void ScrollTime(bool out);
 	void DrawTime(Coord x, Coord y);
 	void AnimateTime(Coord x, Coord y);
+#endif
 private:
 	enum { TX_BUF_SIZE = 4 };
 
@@ -41,7 +43,9 @@ private:
 
 	void DrawFrame(Coord x, Coord y);
 	void PrintTime(char* buf);
+#ifdef USE_RTC
 	void TimeToBuf(char* buf, time_t t);
+#endif
 	void AnimateChange(char* bufOld, char* bufNew);
 };
 

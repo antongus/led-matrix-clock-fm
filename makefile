@@ -60,6 +60,7 @@ endif
 
 # Config options:
 	USE_PROFILER		= NO
+	USE_RTC             = NO
 
 ###########################################################
 #  common part for all my cortex-m3/m4 projects
@@ -94,6 +95,11 @@ endif
 # defines and target name
 ifeq ($(USE_PROFILER),YES)
 	DEFS	+= -DUSE_PROFILER
+endif
+
+# defines and target name
+ifeq ($(USE_RTC),YES)
+	DEFS	+= -DUSE_RTC
 endif
 
 

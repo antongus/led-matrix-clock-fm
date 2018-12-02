@@ -21,14 +21,16 @@ private:
 	int station_;
 	void SelectStation(int st);
 	void SetBrightness(int br);
+#ifdef USE_RTC
 	void ScrollDate();
 	bool EditTime();
 	bool EditDate();
-	bool EditBrightness();
 	bool EditCorr();
+	bool GetMonth(int* val);
+#endif
+	bool EditBrightness();
 	void EditConfig();
 	bool GetInt(char const* prompt, int min, int max, int* val, bool wrap=true);
-	bool GetMonth(int* val);
 };
 
 extern App app;

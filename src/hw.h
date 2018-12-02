@@ -18,12 +18,15 @@
 #define FW_VERSION             ((VER_MAJOR * 10.0) + VER_MINOR) / 10.0
 
 #include "stm32.h"
+#include "pin.h"
 
+#ifdef USE_RTC
 /**
  * RTC module
  */
 #include "rtc.h"
 extern RtcModuleLSE rtc;
+#endif
 
 /**
  * Keyboard stuff

@@ -8,7 +8,10 @@
 **/
 #include "hw.h"
 
+#ifdef USE_RTC
 RtcModuleLSE rtc;
+#endif
+
 KeyboardType kbd;
 TMax Max;
 FmTuner tuner;
