@@ -13,14 +13,13 @@
 
 # toolchain
 	TOOL	= arm-none-eabi-
-#	TOOL	= LC_MESSAGES=C arm-kgp-eabi-
 
 # program version
 	VER_MAJOR	= 0
 	VER_MINOR	= 3
 
 # compile options
-	OPTIMIZE        = -O3
+	OPTIMIZE        = -O2
 	USE_LTO         = NO
 	USE_CPP11       = YES
 	USE_NANO_LIB    = YES
@@ -74,13 +73,10 @@ endif
 	OBJCOPY		= $(TOOL)objcopy
 	OBJDUMP		= $(TOOL)objdump
 	SIZE		= $(TOOL)size -d
-#	FLASHER		= openocd
+	FLASHER		= openocd
 #	FLASHER		= stm32flash
-ifeq ($(OS),Windows_NT)
-	FLASHER		= ST-LINK_CLI
-else
-	FLASHER		= st-flash
-endif
+#	FLASHER		= ST-LINK_CLI
+#	FLASHER		= st-flash
 	DOXYGEN		= doxygen
 	RM			= rm -f
 	CP			= cp
@@ -214,8 +210,7 @@ endif
 	OPENOCD_PARAMS		= -d0
 
 # interface and board/target settings (using the OOCD target-library here)
-	OPENOCD_PARAMS		+= -f interface/arm-usb-ocd.cfg 
-	OPENOCD_PARAMS		+= -f $(PRJDIR)/STM32F10X.cfg
+	OPENOCD_PARAMS		+= -f $(PRJDIR)/openocd.cfg
 	OPENOCD_PARAMS		+= -c init
 	OPENOCD_PARAMS		+= -c "sleep 200"
 
