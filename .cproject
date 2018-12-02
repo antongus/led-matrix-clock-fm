@@ -5,12 +5,12 @@
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="0.1775878537" moduleId="org.eclipse.cdt.core.settings" name="Default">
 				<externalSettings/>
 				<extensions>
-					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
-					<extension id="org.eclipse.cdt.core.GNU_ELF" point="org.eclipse.cdt.core.BinaryParser"/>
 					<extension id="org.eclipse.cdt.core.MakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="org.eclipse.cdt.core.GNU_ELF" point="org.eclipse.cdt.core.BinaryParser"/>
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
@@ -21,12 +21,72 @@
 							<builder buildPath="${workspace_loc:/project}" errorParsers="org.eclipse.cdt.core.MakeErrorParser" id="org.eclipse.cdt.build.core.settings.default.builder.10689591" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" superClass="org.eclipse.cdt.build.core.settings.default.builder"/>
 							<tool errorParsers="org.eclipse.cdt.core.GCCErrorParser;org.eclipse.cdt.core.GASErrorParser;org.eclipse.cdt.core.GLDErrorParser" id="org.eclipse.cdt.build.core.settings.holder.libs.279718134" name="holder for library settings" superClass="org.eclipse.cdt.build.core.settings.holder.libs"/>
 							<tool errorParsers="org.eclipse.cdt.core.GCCErrorParser;org.eclipse.cdt.core.GASErrorParser;org.eclipse.cdt.core.GLDErrorParser" id="org.eclipse.cdt.build.core.settings.holder.340636938" name="Assembly" superClass="org.eclipse.cdt.build.core.settings.holder">
+								<option id="org.eclipse.cdt.build.core.settings.holder.undef.incpaths.1108312728" superClass="org.eclipse.cdt.build.core.settings.holder.undef.incpaths" valueType="undefIncludePath">
+									<listOptionValue builtIn="false" value="/home/anton/kgp/arm-none-eabi/include/c++/4.7.4"/>
+									<listOptionValue builtIn="false" value="/home/anton/kgp/arm-none-eabi/include"/>
+									<listOptionValue builtIn="false" value="c:\tools\kgp\bin\../arm-none-eabi/include/c++/4.7.3/backward"/>
+									<listOptionValue builtIn="false" value="c:\tools\kgp\bin\../arm-none-eabi/include/c++/4.7.3/arm-none-eabi/armv7-m"/>
+									<listOptionValue builtIn="false" value="/opt/kgp/arm-none-eabi/include/c++/4.8.4"/>
+									<listOptionValue builtIn="false" value="/home/anton/kgp/arm-none-eabi/include/c++/4.7.4/backward"/>
+									<listOptionValue builtIn="false" value="/opt/kgp/lib/gcc/arm-none-eabi/4.8.4/include-fixed"/>
+									<listOptionValue builtIn="false" value="/home/anton/kgp/arm-none-eabi/include/c++/4.7.4/arm-none-eabi/armv7-m"/>
+									<listOptionValue builtIn="false" value="/home/anton/kgp/lib/gcc/arm-none-eabi/4.7.4/include"/>
+									<listOptionValue builtIn="false" value="c:\tools\kgp\bin\../arm-none-eabi/include/c++/4.7.3"/>
+									<listOptionValue builtIn="false" value="/home/anton/kgp/lib/gcc/arm-none-eabi/4.7.4/include-fixed"/>
+									<listOptionValue builtIn="false" value="/opt/kgp/arm-none-eabi/include"/>
+									<listOptionValue builtIn="false" value="c:\tools\kgp\bin\../lib/gcc/arm-none-eabi/4.7.3/include-fixed"/>
+									<listOptionValue builtIn="false" value="c:\tools\kgp\bin\../arm-none-eabi/include"/>
+									<listOptionValue builtIn="false" value="/opt/kgp/arm-none-eabi/include/c++/4.8.4/backward"/>
+									<listOptionValue builtIn="false" value="/opt/kgp/lib/gcc/arm-none-eabi/4.8.4/include"/>
+									<listOptionValue builtIn="false" value="/opt/kgp/arm-none-eabi/include/c++/4.8.4/arm-none-eabi/armv7-m"/>
+									<listOptionValue builtIn="false" value="c:\tools\kgp\bin\../lib/gcc/arm-none-eabi/4.7.3/include"/>
+								</option>
 								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.2055876383" languageId="org.eclipse.cdt.core.assembly" languageName="Assembly" sourceContentType="org.eclipse.cdt.core.asmSource" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
 							</tool>
 							<tool errorParsers="org.eclipse.cdt.core.GCCErrorParser;org.eclipse.cdt.core.GASErrorParser;org.eclipse.cdt.core.GLDErrorParser" id="org.eclipse.cdt.build.core.settings.holder.1970829591" name="GNU C++" superClass="org.eclipse.cdt.build.core.settings.holder">
+								<option id="org.eclipse.cdt.build.core.settings.holder.undef.incpaths.1172200707" superClass="org.eclipse.cdt.build.core.settings.holder.undef.incpaths" valueType="undefIncludePath">
+									<listOptionValue builtIn="false" value="/home/anton/kgp/arm-none-eabi/include/c++/4.7.4"/>
+									<listOptionValue builtIn="false" value="/home/anton/kgp/arm-none-eabi/include"/>
+									<listOptionValue builtIn="false" value="c:\tools\kgp\bin\../arm-none-eabi/include/c++/4.7.3/backward"/>
+									<listOptionValue builtIn="false" value="c:\tools\kgp\bin\../arm-none-eabi/include/c++/4.7.3/arm-none-eabi/armv7-m"/>
+									<listOptionValue builtIn="false" value="/opt/kgp/arm-none-eabi/include/c++/4.8.4"/>
+									<listOptionValue builtIn="false" value="/home/anton/kgp/arm-none-eabi/include/c++/4.7.4/backward"/>
+									<listOptionValue builtIn="false" value="/opt/kgp/lib/gcc/arm-none-eabi/4.8.4/include-fixed"/>
+									<listOptionValue builtIn="false" value="/home/anton/kgp/arm-none-eabi/include/c++/4.7.4/arm-none-eabi/armv7-m"/>
+									<listOptionValue builtIn="false" value="/home/anton/kgp/lib/gcc/arm-none-eabi/4.7.4/include"/>
+									<listOptionValue builtIn="false" value="c:\tools\kgp\bin\../arm-none-eabi/include/c++/4.7.3"/>
+									<listOptionValue builtIn="false" value="/home/anton/kgp/lib/gcc/arm-none-eabi/4.7.4/include-fixed"/>
+									<listOptionValue builtIn="false" value="/opt/kgp/arm-none-eabi/include"/>
+									<listOptionValue builtIn="false" value="c:\tools\kgp\bin\../lib/gcc/arm-none-eabi/4.7.3/include-fixed"/>
+									<listOptionValue builtIn="false" value="c:\tools\kgp\bin\../arm-none-eabi/include"/>
+									<listOptionValue builtIn="false" value="/opt/kgp/arm-none-eabi/include/c++/4.8.4/backward"/>
+									<listOptionValue builtIn="false" value="/opt/kgp/lib/gcc/arm-none-eabi/4.8.4/include"/>
+									<listOptionValue builtIn="false" value="/opt/kgp/arm-none-eabi/include/c++/4.8.4/arm-none-eabi/armv7-m"/>
+									<listOptionValue builtIn="false" value="c:\tools\kgp\bin\../lib/gcc/arm-none-eabi/4.7.3/include"/>
+								</option>
 								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.856818578" languageId="org.eclipse.cdt.core.g++" languageName="GNU C++" sourceContentType="org.eclipse.cdt.core.cxxSource,org.eclipse.cdt.core.cxxHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
 							</tool>
 							<tool errorParsers="org.eclipse.cdt.core.GCCErrorParser;org.eclipse.cdt.core.GASErrorParser;org.eclipse.cdt.core.GLDErrorParser" id="org.eclipse.cdt.build.core.settings.holder.1511952138" name="GNU C" superClass="org.eclipse.cdt.build.core.settings.holder">
+								<option id="org.eclipse.cdt.build.core.settings.holder.undef.incpaths.1425404603" superClass="org.eclipse.cdt.build.core.settings.holder.undef.incpaths" valueType="undefIncludePath">
+									<listOptionValue builtIn="false" value="/home/anton/kgp/arm-none-eabi/include/c++/4.7.4"/>
+									<listOptionValue builtIn="false" value="/home/anton/kgp/arm-none-eabi/include"/>
+									<listOptionValue builtIn="false" value="c:\tools\kgp\bin\../arm-none-eabi/include/c++/4.7.3/backward"/>
+									<listOptionValue builtIn="false" value="c:\tools\kgp\bin\../arm-none-eabi/include/c++/4.7.3/arm-none-eabi/armv7-m"/>
+									<listOptionValue builtIn="false" value="/opt/kgp/arm-none-eabi/include/c++/4.8.4"/>
+									<listOptionValue builtIn="false" value="/home/anton/kgp/arm-none-eabi/include/c++/4.7.4/backward"/>
+									<listOptionValue builtIn="false" value="/opt/kgp/lib/gcc/arm-none-eabi/4.8.4/include-fixed"/>
+									<listOptionValue builtIn="false" value="/home/anton/kgp/arm-none-eabi/include/c++/4.7.4/arm-none-eabi/armv7-m"/>
+									<listOptionValue builtIn="false" value="/home/anton/kgp/lib/gcc/arm-none-eabi/4.7.4/include"/>
+									<listOptionValue builtIn="false" value="c:\tools\kgp\bin\../arm-none-eabi/include/c++/4.7.3"/>
+									<listOptionValue builtIn="false" value="/home/anton/kgp/lib/gcc/arm-none-eabi/4.7.4/include-fixed"/>
+									<listOptionValue builtIn="false" value="/opt/kgp/arm-none-eabi/include"/>
+									<listOptionValue builtIn="false" value="c:\tools\kgp\bin\../lib/gcc/arm-none-eabi/4.7.3/include-fixed"/>
+									<listOptionValue builtIn="false" value="c:\tools\kgp\bin\../arm-none-eabi/include"/>
+									<listOptionValue builtIn="false" value="/opt/kgp/arm-none-eabi/include/c++/4.8.4/backward"/>
+									<listOptionValue builtIn="false" value="/opt/kgp/lib/gcc/arm-none-eabi/4.8.4/include"/>
+									<listOptionValue builtIn="false" value="/opt/kgp/arm-none-eabi/include/c++/4.8.4/arm-none-eabi/armv7-m"/>
+									<listOptionValue builtIn="false" value="c:\tools\kgp\bin\../lib/gcc/arm-none-eabi/4.7.3/include"/>
+								</option>
 								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.1315909382" languageId="org.eclipse.cdt.core.gcc" languageName="GNU C" sourceContentType="org.eclipse.cdt.core.cSource,org.eclipse.cdt.core.cHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
 							</tool>
 						</toolChain>
@@ -180,4 +240,5 @@
 			</profile>
 		</scannerConfigBuildInfo>
 	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 </cproject>

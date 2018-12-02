@@ -133,27 +133,27 @@ private:
 template <typename props>
 void Tea5767<props>::readData()
 {
-	i2c_.start();
-	i2c_.write(TUNER_ADDR | 1);
-	rxData_.bytes[4] = i2c_.read(false);
-	rxData_.bytes[3] = i2c_.read(false);
-	rxData_.bytes[2] = i2c_.read(false);
-	rxData_.bytes[1] = i2c_.read(false);
-	rxData_.bytes[0] = i2c_.read(true);
-	i2c_.stop();
+	i2c_.Start();
+	i2c_.Write(TUNER_ADDR | 1);
+	rxData_.bytes[4] = i2c_.Read(false);
+	rxData_.bytes[3] = i2c_.Read(false);
+	rxData_.bytes[2] = i2c_.Read(false);
+	rxData_.bytes[1] = i2c_.Read(false);
+	rxData_.bytes[0] = i2c_.Read(true);
+	i2c_.Stop();
 }
 
 template <typename props>
 void Tea5767<props>::writeData()
 {
-	i2c_.start();
-	i2c_.write(TUNER_ADDR);
-	i2c_.write(txData_.bytes[4]);
-	i2c_.write(txData_.bytes[3]);
-	i2c_.write(txData_.bytes[2]);
-	i2c_.write(txData_.bytes[1]);
-	i2c_.write(txData_.bytes[0]);
-	i2c_.stop();
+	i2c_.Start();
+	i2c_.Write(TUNER_ADDR);
+	i2c_.Write(txData_.bytes[4]);
+	i2c_.Write(txData_.bytes[3]);
+	i2c_.Write(txData_.bytes[2]);
+	i2c_.Write(txData_.bytes[1]);
+	i2c_.Write(txData_.bytes[0]);
+	i2c_.Stop();
 }
 
 #endif // TEA5767_H_INCLUDED
